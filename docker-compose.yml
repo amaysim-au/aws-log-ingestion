@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  trial:
+    build:
+      dockerfile: dockerfiles/Dockerfile.base
+      context: .
+    env_file: .env
+  builder:
+    build: .
+    env_file: .env
+    volumes:
+      - type: bind
+        source: .
+        target: /tmp
+  serverless:
+    image: amaysim/serverless:3.38.0
+    env_file: .env
+    volumes:
+      - ~/.aws:/root/.aws:Z
+      - ~/.ssh:/root/.ssh:Z
+      - .:/opt/app:Z
+

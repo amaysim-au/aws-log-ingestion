@@ -3,7 +3,8 @@ service: newrelic-log-ingestion
 provider:
   name: aws
   runtime: python3.11
-  stage: production
+  stage: ${env:ENV, "nonprod"}
+  region: ${env:AWS_REGION, "ap-southeast-2"}
   timeout: 30
 
   # Uncomment this line to use your own IAM role
@@ -21,16 +22,14 @@ provider:
 
 custom:
   pythonRequirements:
-    dockerizePip: true
+    dockerizePip: false
     fileName: ./src/requirements.txt
 
 package:
-  exclude:
-    - ./**
-  include:
-
-    - ./LICENSE
-    - ./src/function.py
+  patterns:
+    - '!./**'
+    - './LICENSE'
+    - './src/function.py'
 
 functions:
   newrelic-log-ingestion:
